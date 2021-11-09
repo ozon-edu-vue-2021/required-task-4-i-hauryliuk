@@ -1,6 +1,5 @@
 <template>
-  <form class="form" autocomplete="off">
-    <div style="pading: 1em;">{{formData}}</div>
+  <form class="form" autocomplete="off" @submit.prevent="formSubmitHandler">
     <h3>Личные данные</h3>
     <div class="field-set">
       <div class="field">
@@ -220,6 +219,14 @@ export default {
   methods: {
     nationalityDropdownCloseHandler(val) {
       this.isNationalityDropdownClosed = val;
+    },
+    formSubmitHandler() {
+      const userData = {};
+      console.log(Object.keys(this.formData).forEach((key) => {
+        if (this.formData[key])
+        userData[key] = this.formData[key];
+      }));
+      console.log(JSON.stringify(userData));
     },
   },
   watch: {
