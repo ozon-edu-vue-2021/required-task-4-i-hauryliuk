@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown">
+  <div class="dropdown" v-click-outside="closeDropdown">
     <label
       class="dropdown__label"
       :for="$attrs['input-id']"
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+  import ClickOutside from 'vue-click-outside';
+
   export default {
     inheritAttrs: false,
     props: {
@@ -54,7 +56,7 @@
     data() {
       return {
         isDropdownOpened: false,
-        selectedValue: null,
+        selectedValue: '',
       };
     },
     methods: {
@@ -64,11 +66,24 @@
       itemClickHandler(item) {
         if (item) {
           this.selectedValue = item.value;
-          this.$emit('input', item.value);
         }
+        this.closeDropdown();
+      },
+      closeDropdown() {
         this.isDropdownOpened = false;
       },
-    }
+    },
+    watch: {
+      isDropdownOpened(newVal) {
+        newVal ? this.$emit('dropdown-closed', false) : this.$emit('dropdown-closed', true);
+      },
+      selectedValue() {
+        this.$emit('input', this.selectedValue);
+      }
+    },
+    directives: {
+      ClickOutside,
+    },
   };
 </script>
 
@@ -78,7 +93,6 @@
     flex-direction: column;
     position: relative;
     width: 100%;
-    margin-bottom: 0.7em;
   }
   .dropdown__label {
     color: inherit;
