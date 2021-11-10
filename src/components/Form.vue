@@ -6,26 +6,31 @@
         <label>Фамилия
           <input v-model="formData.lastName" type="text" required>
         </label>
+        <span v-if="isLastNameNotValid" class="error-msg">{{errorMsgs.notCyrilic}}</span>
       </div>
       <div class="field">
         <label>Имя
           <input v-model="formData.firstName" type="text" required>
         </label>
+        <span v-if="isFirstNameNotValid" class="error-msg">{{errorMsgs.notCyrilic}}</span>
       </div>
       <div class="field">
         <label>Отчество
           <input v-model="formData.middleName" type="text" required>
         </label>
+        <span v-if="isMiddleNameNotValid" class="error-msg">{{errorMsgs.notCyrilic}}</span>
       </div>
       <div class="field">
         <label>Дата рождения
           <input v-model="formData.birthday" type="text" placeholder="дд.мм.гггг" required>
         </label>
+        <span v-if="isDateNotValid" class="error-msg">{{errorMsgs.dateNotValid}}</span>
       </div>
       <div class="field">
         <label>E-mail
           <input v-model="formData.email" type="email" placeholder="mailbox@exapmple.com" required>
         </label>
+        <span v-if="isEmailNotValid" class="error-msg">{{errorMsgs.emailNotValid}}</span>
       </div>
       <div class="field field_radio-group">
         <span>Пол</span>
@@ -61,16 +66,19 @@
             <label>Фамилия на латинице
               <input v-model="formData.latinLastName" type="text" required>
             </label>
+            <span v-if="isLatinLastNameNotValid" class="error-msg">{{errorMsgs.notLatin}}</span>
           </div>
           <div class="field">
             <label>Имя на латинице
               <input v-model="formData.latinFirstName" type="text" required>
             </label>
+            <span v-if="isLatinFirstNameNotValid" class="error-msg">{{errorMsgs.notLatin}}</span>
           </div>
           <div class="field">
             <label>Номер паспорта
               <input v-model="formData.pasportNumber" type="text" required>
             </label>
+            <span v-if="isOtherPassportNumberNotValid" class="error-msg">{{errorMsgs.otherPassportNumberNotValid}}</span>
           </div>
           <div class="field">
             <Dropdown
@@ -92,11 +100,13 @@
             <label>Серия паспорта
               <input v-model="formData.pasportSeries" id="pp-series" type="text" placeholder="xxxx" required>
             </label>
+            <span v-if="isRuPassportSeriesNotValid" class="error-msg">{{errorMsgs.ruPassportSeriesNotValid}}</span>
           </div>
           <div class="field field_pp-number">
             <label>Номер паспорта
               <input v-model="formData.pasportNumber" type="text" placeholder="xxxxxx" required>
             </label>
+            <span v-if="isRuPassportNumberNotValid" class="error-msg">{{errorMsgs.ruPassportNumberNotValid}}</span>
           </div>
           <div class="field field_pp-issue-date">
             <label>Дата выдачи
@@ -126,11 +136,13 @@
             <label>Фамилия
               <input v-model="formData.prevLastName" type="text">
             </label>
+            <span v-if="isPrevLastNameNotValid" class="error-msg">{{errorMsgs.notCyrilic}}</span>
           </div>
           <div class="field">
             <label>Имя
               <input v-model="formData.prevFirstName" id="prev-first-name" type="text">
             </label>
+            <span v-if="isPrevFirstNameNotValid" class="error-msg">{{errorMsgs.notCyrilic}}</span>
           </div>
         </div>
 
@@ -147,6 +159,16 @@
 import Dropdown from './Dropdown.vue';
 import citizenships from '@/assets/data/citizenships.json';
 import passportTypesData from '@/assets/data/passport-types.json';
+import {
+  isCyrilicText,
+  isLatinText,
+  isFourDigits,
+  isSixDigits,
+  isOnlyDigits,
+  isEmail,
+  isDate,
+  isNotGreaterNow,
+} from '../helpers/validators.js';
 
 export default {
   components: {
@@ -176,6 +198,15 @@ export default {
         prevFirstName: '',
         prevLastName: '',
       },
+      errorMsgs: {
+        notCyrilic: 'Значение только кириллицей',
+        notLatin: 'Значение только латиницей',
+        ruPassportSeriesNotValid: 'Четыре цифры в формате xxxx',
+        ruPassportNumberNotValid: 'Шесть цифр в формате xxxxxx',
+        otherPassportNumberNotValid: 'Допустимы только цифры',
+        emailNotValid: 'Допустим только корректный email адрес',
+        dateNotValid: 'Допустимый фрпмат даты дд.мм.гггг',
+      }
     };
   },
   created() {
@@ -236,7 +267,45 @@ export default {
     isSubmitPossible() {
       return this.isCommonFieldsFilled && this.isNationalFieldsFilled;
     },
-
+    isLastNameNotValid() {
+      return !isCyrilicText(this.formData.lastName);
+    },
+    isFirstNameNotValid() {
+      return !isCyrilicText(this.formData.firstName);
+    },
+    isMiddleNameNotValid() {
+      return !isCyrilicText(this.formData.middleName);
+    },
+    isPrevLastNameNotValid() {
+      return !isCyrilicText(this.formData.prevLastName);
+    },
+    isPrevFirstNameNotValid() {
+      return !isCyrilicText(this.formData.prevFirstName);
+    },
+    isLatinFirstNameNotValid() {
+      return !isLatinText(this.formData.latinFirstName);
+    },
+    isLatinLastNameNotValid() {
+      return !isLatinText(this.formData.latinLastName);
+    },
+    isRuPassportSeriesNotValid() {
+      return !isFourDigits(this.formData.pasportSeries)
+    },
+    isRuPassportNumberNotValid() {
+      return !isSixDigits(this.formData.pasportNumber)
+    },
+    isOtherPassportNumberNotValid() {
+      return !isOnlyDigits(this.formData.pasportNumber)
+    },
+    isEmailNotValid() {
+      return !isEmail(this.formData.email);
+    },
+    isDateNotValid() {
+      if (isDate(this.formData.birthday) && this.formData.birthday !== '') {
+        return !isNotGreaterNow(this.formData.birthday);
+      }
+      return this.formData.birthday === '' ? false : true;
+    },
   },
   methods: {
     nationalityDropdownCloseHandler(val) {
@@ -304,6 +373,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     column-gap: 1em;
+    margin-bottom: 1em;
   }
   .field_pp-series {
     grid-column: 1 / span 2;
@@ -320,9 +390,18 @@ export default {
     column-gap: 1em;
   }
   .field {
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-bottom: 0.7em;
+  }
+  .error-msg {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    font-size: 0.7em;
+    color:#d02626;
+    text-align: right;
   }
   span {
     font-size: 0.9em;
