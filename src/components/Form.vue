@@ -3,33 +3,44 @@
     <h3>Личные данные</h3>
     <div class="field-set">
       <div class="field">
-        <label for="last-name">Фамилия</label>
-        <input v-model="formData.lastName" id="last-name" type="text" required>
+        <label>Фамилия
+          <input v-model="formData.lastName" type="text" required>
+        </label>
       </div>
       <div class="field">
-        <label for="first-name">Имя</label>
-        <input v-model="formData.firstName" id="first-name" type="text" required>
+        <label>Имя
+          <input v-model="formData.firstName" type="text" required>
+        </label>
       </div>
       <div class="field">
-        <label for="middle-name">Отчество</label>
-        <input v-model="formData.middleName" id="middle-name" type="text" required>
+        <label>Отчество
+          <input v-model="formData.middleName" type="text" required>
+        </label>
       </div>
       <div class="field">
-        <label for="birthday">Дата рождения</label>
-        <input v-model="formData.birthday" id="birthday" type="text" placeholder="дд.мм.гггг" required>
+        <label>Дата рождения
+          <input v-model="formData.birthday" type="text" placeholder="дд.мм.гггг" required>
+        </label>
       </div>
       <div class="field">
-        <label for="email">E-mail</label>
-        <input v-model="formData.email" id="email" type="email" placeholder="mailbox@exapmple.com" required>
+        <label>E-mail
+          <input v-model="formData.email" type="email" placeholder="mailbox@exapmple.com" required>
+        </label>
       </div>
-      <div class="field">
+      <div class="field field_radio-group">
         <span>Пол</span>
         <div class="radio-group">
           <div class="radio-group__item">
-            <input v-model="formData.gender" id="male" type="radio" value="male" required><label for="male">Мужской</label>
+            <label class="radio-label">
+              <input v-model="formData.gender" type="radio" value="male" required>
+              Мужской
+            </label>
           </div>
           <div class="radio-group__item">
-            <input v-model="formData.gender" id="female" type="radio" value="female"><label for="female">Женский</label>
+            <label class="radio-label">
+              <input v-model="formData.gender" type="radio" value="female">
+              Женский
+            </label>
           </div>
         </div>
       </div>
@@ -38,7 +49,6 @@
     <div class="field-set">
       <div class="field">
         <Dropdown
-          input-id="nationality"
           label="Гражданство"
           v-model="formData.nationality"
           :items="nationalities"
@@ -48,20 +58,22 @@
       <div v-if="isNationalitySelected" class="nation-specific">
         <div v-if="isNotRussian" class="not-russian">
           <div class="field">
-            <label for="latin-last-name">Фамилия на латинице</label>
-            <input v-model="formData.latinLastName" id="latin-last-name" type="text" required>
+            <label>Фамилия на латинице
+              <input v-model="formData.latinLastName" type="text" required>
+            </label>
           </div>
           <div class="field">
-            <label for="latin-first-name">Имя на латинице</label>
-            <input v-model="formData.latinFirstName" id="latin-first-name" type="text" required>
+            <label>Имя на латинице
+              <input v-model="formData.latinFirstName" type="text" required>
+            </label>
           </div>
           <div class="field">
-            <label for="pp-number">Номер паспорта</label>
-            <input v-model="formData.pasportNumber" id="pp-number" type="text" required>
+            <label>Номер паспорта
+              <input v-model="formData.pasportNumber" type="text" required>
+            </label>
           </div>
           <div class="field">
             <Dropdown
-              input-id="issue-country"
               label="Страна выдачи"
               v-model="formData.issueСountry"
               :items="nationalities"
@@ -69,7 +81,6 @@
           </div>
           <div class="field">
             <Dropdown
-              input-id="passport-type"
               label="Тип паспорта"
               v-model="formData.passportType"
               :items="passportTypes"
@@ -78,37 +89,48 @@
         </div>
         <div v-else class="russian">
           <div class="field field_pp-series">
-            <label for="pp-series">Серия паспорта</label>
-            <input v-model="formData.pasportSeries" id="pp-series" type="text" placeholder="xx xx" required>
+            <label>Серия паспорта
+              <input v-model="formData.pasportSeries" id="pp-series" type="text" placeholder="xxxx" required>
+            </label>
           </div>
           <div class="field field_pp-number">
-            <label for="pp-number">Номер паспорта</label>
-            <input v-model="formData.pasportNumber" id="pp-number" type="text" placeholder="yyyyyy" required>
+            <label>Номер паспорта
+              <input v-model="formData.pasportNumber" type="text" placeholder="xxxxxx" required>
+            </label>
           </div>
           <div class="field field_pp-issue-date">
-            <label for="pp-issue-date">Дата выдачи</label>
-            <input v-model="formData.issueDate" id="pp-issue-date" type="text" placeholder="дд.мм.гггг" required>
+            <label>Дата выдачи
+              <input v-model="formData.issueDate" type="text" placeholder="дд.мм.гггг" required>
+            </label>
           </div>
         </div>
-        <div class="field">
+        <div class="field field_radio-group">
           <span>Меняли ли фамилию или имя?</span>
           <div class="radio-group">
             <div class="radio-group__item">
-              <input v-model="formData.namesChanged" id="names-changed-no" type="radio" value="no" required><label for="names-changed-no">Нет</label>
+              <label class="radio-label">
+                <input v-model="formData.namesChanged" type="radio" value="no" required>
+                Нет
+              </label>
             </div>
             <div class="radio-group__item">
-              <input v-model="formData.namesChanged" id="names-changed-yes" type="radio" value="yes"><label for="names-changed-yes">Да</label>
+              <label class="radio-label">
+                <input v-model="formData.namesChanged" type="radio" value="yes">
+                Да
+              </label>
             </div>
           </div>
         </div>
         <div v-if="isNamesChanged" class="prev-names">
           <div class="field">
-            <label for="prev-last-name">Фамилия</label>
-            <input v-model="formData.prevLastName" id="prev-last-name" type="text">
+            <label>Фамилия
+              <input v-model="formData.prevLastName" type="text">
+            </label>
           </div>
           <div class="field">
-            <label for="prev-first-name">Имя</label>
-            <input v-model="formData.prevFirstName" id="prev-first-name" type="text">
+            <label>Имя
+              <input v-model="formData.prevFirstName" id="prev-first-name" type="text">
+            </label>
           </div>
         </div>
 
@@ -305,6 +327,9 @@ export default {
   span {
     font-size: 0.9em;
   }
+  .field_radio-group {
+    align-self: stretch;
+  }
   .radio-group {
     display: flex;
     align-items: stretch;
@@ -312,7 +337,12 @@ export default {
   }
   .radio-group__item {
     display: flex;
+    margin-right: 1em;
+  }
+  .radio-label {
+    flex-direction: row;
     align-items: center;
+    font-size: 1.2em;
   }
   input[type="radio"] {
     width: initial;
@@ -349,6 +379,8 @@ export default {
 
 <style>
   label {
+    display: flex;
+    flex-direction: column;
     font-size: 0.9em;
   }
   input {

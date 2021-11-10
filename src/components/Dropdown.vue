@@ -2,18 +2,16 @@
   <div class="dropdown" v-click-outside="closeDropdown">
     <label
       class="dropdown__label"
-      :for="$attrs['input-id']"
     >
-      {{$attrs.label}}
+      {{label}}
+      <input
+        class="dropdown__input"
+        type="text"
+        required
+        v-model="selectedValue"
+        @click="dropdownClickHandler"
+      >
     </label>
-    <input
-      :id="$attrs['input-id']"
-      class="dropdown__input"
-      type="text"
-      required
-      v-model="selectedValue"
-      @click="dropdownClickHandler"
-    >
     <ul
       class="dropdown__list"
       v-show="isDropdownOpened"
@@ -51,6 +49,10 @@
         default() {
           return [];
         },
+      },
+      label: {
+        type: String,
+        default: '',
       },
     },
     data() {
