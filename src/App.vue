@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import Form from "./components/Form.vue";
+import Form from './components/Form.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Form,
   },
@@ -20,14 +20,13 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;
   background-color: #fafafa;
-  padding: 24px;
-  box-sizing: border-box;
+  padding: 12px;
 }
 
 html,
 body,
 #app {
-  height: 100%;
+  min-height: 100vh;
 }
 
 * {
