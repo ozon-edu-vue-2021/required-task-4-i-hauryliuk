@@ -16,10 +16,10 @@
       class="dropdown__list"
       v-show="isDropdownOpened"
     >
-      <template v-if="items.length">
+      <template v-if="actualList.length">
         <li
           class="dropdown__item"
-          v-for="(item, index) in items"
+          v-for="(item, index) in actualList"
           :key="item.id || index"
           @click="itemClickHandler(item)"
         >
@@ -40,6 +40,7 @@
 
 <script>
   import ClickOutside from 'vue-click-outside';
+  import {debounce} from '../helpers/debounce.js';
 
   export default {
     inheritAttrs: false,
@@ -59,7 +60,13 @@
       return {
         isDropdownOpened: false,
         selectedValue: '',
+        actualList: null,
+        debouncedRelevantList: null,
       };
+    },
+    created() {
+      this.debouncedRelevantList = debounce(this.getRelevantList, 700);
+      this.getRelevantList(this.selectedValue);
     },
     methods: {
       dropdownClickHandler() {
@@ -74,12 +81,18 @@
       closeDropdown() {
         this.isDropdownOpened = false;
       },
+      getRelevantList(value) {
+        this.actualList = this.items.filter(
+          (item) => item.value.toLowerCase().startsWith(value.toLowerCase())
+        );
+      },
     },
     watch: {
       isDropdownOpened(newVal) {
         newVal ? this.$emit('dropdown-closed', false) : this.$emit('dropdown-closed', true);
       },
       selectedValue() {
+        this.debouncedRelevantList(this.selectedValue);
         this.$emit('input', this.selectedValue);
       }
     },
